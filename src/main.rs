@@ -1,5 +1,5 @@
 use std::{io, error::Error, time::{Instant, Duration}, sync::mpsc, thread};
-use rusty_audio::Audio;
+//use rusty_audio::Audio;
 use crossterm::{ExecutableCommand, terminal, cursor::{Show, Hide}, event};
 use terminal::{LeaveAlternateScreen, EnterAlternateScreen};
 use event::{KeyCode, Event};
@@ -7,14 +7,14 @@ use invaders::{render, frame, player::Player, invaders::Invaders};
 use frame::{Drawable, new_frame};
 
 fn main() -> Result <(), Box<dyn Error>> {
-    let mut audio = Audio::new();
+    /*let mut audio = Audio::new();
     audio.add("explode", "explode.wav");
     audio.add("lose", "lose.wav");
     audio.add("move", "move.wav");
     audio.add("pew", "pew.wav");
     audio.add("startup", "startup.wav");
     audio.add("win", "win.wav");
-    audio.play("startup");
+    audio.play("startup");*/
 
     //Terminal
     let mut stdout = io::stdout();
@@ -58,11 +58,11 @@ fn main() -> Result <(), Box<dyn Error>> {
                     KeyCode::Right => player.move_right(),
                     KeyCode::Char(' ') | KeyCode::Enter => {
                         if player.shoot () {
-                            audio.play("pew");
+                            //audio.play("pew");
                         }
                     }
                     KeyCode::Esc | KeyCode::Char('q') => {
-                        audio.play("lose");
+                        //audio.play("lose");
                         break 'gameloop
                     },
                     _ => {}
@@ -74,10 +74,10 @@ fn main() -> Result <(), Box<dyn Error>> {
         //Updates
         player.update(delta);
         if invaders.update(delta) {
-            audio.play("move");
+            //audio.play("move");
         }
         if player.detect_hits(&mut invaders) {
-            audio.play("explode");
+            //audio.play("explode");
         }
 
         //Draw and render
@@ -90,11 +90,11 @@ fn main() -> Result <(), Box<dyn Error>> {
 
         //Win or lose
         if invaders.all_killed() {
-            audio.play("win");
+            //audio.play("win");
             break 'gameloop
         }
         if invaders.reached_bottom(){
-            audio.play("lose");
+            //audio.play("lose");
             break 'gameloop
         }
     }
@@ -103,7 +103,7 @@ fn main() -> Result <(), Box<dyn Error>> {
     //Cleanup
     drop(render_tx);
     render_handle.join().unwrap();
-    audio.wait();
+    //audio.wait();
     stdout.execute(Show)?;
     stdout.execute(LeaveAlternateScreen)?;
     terminal::disable_raw_mode()?;
